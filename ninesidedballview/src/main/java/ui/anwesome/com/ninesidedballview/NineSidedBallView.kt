@@ -3,6 +3,7 @@ package ui.anwesome.com.ninesidedballview
 /**
  * Created by anweshmishra on 01/01/18.
  */
+import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
@@ -120,6 +121,13 @@ class NineSidedBallView(ctx:Context):View(ctx) {
 
                 }
             }
+        }
+    }
+    companion object {
+        fun create(activity:Activity):NineSidedBallView {
+            val view = NineSidedBallView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
