@@ -89,4 +89,29 @@ class NineSidedBallView(ctx:Context):View(ctx) {
             }
         }
     }
+    data class NineSideBallAnimator(var view:NineSidedBallView,var animated:Boolean = false) {
+        fun start() {
+            if(!animated) {
+                animated = true
+                view.postInvalidate()
+            }
+        }
+        fun stop() {
+            if(animated) {
+                animated = false
+            }
+        }
+        fun update(updatecb:()->Float) {
+            if(animated) {
+                updatecb()
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+    }
 }
