@@ -6,6 +6,8 @@ package ui.anwesome.com.ninesidedballview
 import android.view.*
 import android.content.*
 import android.graphics.*
+import java.util.concurrent.ConcurrentLinkedQueue
+
 class NineSidedBallView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
@@ -25,6 +27,32 @@ class NineSidedBallView(ctx:Context):View(ctx) {
             canvas.translate((dx-x)*scale,(dy-y)*scale)
             canvas.drawCircle(0f,0f,r,paint)
             canvas.restore()
+        }
+    }
+    data class NineSideBallContainer(var w:Float,var h:Float,val n:Int = 9) {
+        val balls:ConcurrentLinkedQueue<NineSidedBall> = ConcurrentLinkedQueue()
+        init {
+            val x_gap = w/3
+            val y_gap = h/3
+            for(i in 0..n-1) {
+                val x = x_gap*i + w/6
+                val y = y_gap*i + h/6
+                balls.add(NineSidedBall(x,y))
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(w/2,h/2)
+            balls.forEach {
+                it.draw(canvas,paint,w/2,h/2,Math.min(w,h)/15,1f)
+            }
+            canvas.restore()
+        }
+        fun update(stopcb:(Float)->Unit) {
+
+        }
+        fun startUpdating(startcb:()->Unit) {
+
         }
     }
 }
