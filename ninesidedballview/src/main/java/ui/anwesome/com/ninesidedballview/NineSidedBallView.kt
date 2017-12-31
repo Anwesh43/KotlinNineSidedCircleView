@@ -71,4 +71,22 @@ class NineSidedBallView(ctx:Context):View(ctx) {
             startcb()
         }
     }
+    data class NineSideBallRenderer(var view:NineSidedBallView,var time:Int = 0) {
+        var container:NineSideBallContainer?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                container = NineSideBallContainer(w,h)
+            }
+            paint.color = Color.parseColor("#673AB7")
+            container?.draw(canvas,paint)
+            time++
+        }
+        fun startUpdating() {
+            container?.startUpdating{
+
+            }
+        }
+    }
 }
