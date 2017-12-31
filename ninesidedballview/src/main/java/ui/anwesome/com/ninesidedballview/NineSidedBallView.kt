@@ -38,8 +38,8 @@ class NineSidedBallView(ctx:Context):View(ctx) {
             val x_gap = w/3
             val y_gap = h/3
             for(i in 0..n-1) {
-                val x = x_gap*i + w/6
-                val y = y_gap*i + h/6
+                val x = x_gap*(i%3) + w/6
+                val y = y_gap*(i/3) + h/6
                 balls.add(NineSidedBall(x,y))
             }
         }
