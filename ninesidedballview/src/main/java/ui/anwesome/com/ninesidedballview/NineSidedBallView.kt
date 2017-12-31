@@ -10,13 +10,14 @@ import java.util.concurrent.ConcurrentLinkedQueue
 
 class NineSidedBallView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = NineSideBallRenderer(this)
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.startUpdating()
             }
         }
         return true
@@ -73,19 +74,26 @@ class NineSidedBallView(ctx:Context):View(ctx) {
     }
     data class NineSideBallRenderer(var view:NineSidedBallView,var time:Int = 0) {
         var container:NineSideBallContainer?=null
+        val animator = NineSideBallAnimator(view)
         fun render(canvas:Canvas,paint:Paint) {
             if(time == 0) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 container = NineSideBallContainer(w,h)
             }
+            canvas.drawColor(Color.parseColor("#212121"))
             paint.color = Color.parseColor("#673AB7")
             container?.draw(canvas,paint)
             time++
+            animator.update{
+                container?.update{scale ->
+                    animator.stop()
+                }
+            }
         }
         fun startUpdating() {
             container?.startUpdating{
-
+                animator.start()
             }
         }
     }
@@ -101,7 +109,7 @@ class NineSidedBallView(ctx:Context):View(ctx) {
                 animated = false
             }
         }
-        fun update(updatecb:()->Float) {
+        fun update(updatecb:()->Unit) {
             if(animated) {
                 updatecb()
                 try {
