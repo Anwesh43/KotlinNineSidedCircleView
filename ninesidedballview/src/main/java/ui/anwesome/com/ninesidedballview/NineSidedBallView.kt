@@ -19,4 +19,12 @@ class NineSidedBallView(ctx:Context):View(ctx) {
         }
         return true
     }
+    data class NineSidedBall(var dx:Float,var dy:Float) {
+        fun draw(canvas:Canvas,paint:Paint,x:Float,y:Float,r:Float,scale:Float) {
+            canvas.save()
+            canvas.translate((dx-x)*scale,(dy-y)*scale)
+            canvas.drawCircle(0f,0f,r,paint)
+            canvas.restore()
+        }
+    }
 }
