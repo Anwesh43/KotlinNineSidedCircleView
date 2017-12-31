@@ -30,6 +30,7 @@ class NineSidedBallView(ctx:Context):View(ctx) {
         }
     }
     data class NineSideBallContainer(var w:Float,var h:Float,val n:Int = 9) {
+        val state = NineSideBallState()
         val balls:ConcurrentLinkedQueue<NineSidedBall> = ConcurrentLinkedQueue()
         init {
             val x_gap = w/3
@@ -44,15 +45,15 @@ class NineSidedBallView(ctx:Context):View(ctx) {
             canvas.save()
             canvas.translate(w/2,h/2)
             balls.forEach {
-                it.draw(canvas,paint,w/2,h/2,Math.min(w,h)/15,1f)
+                it.draw(canvas,paint,w/2,h/2,Math.min(w,h)/15,state.scale)
             }
             canvas.restore()
         }
         fun update(stopcb:(Float)->Unit) {
-
+            state.update(stopcb)
         }
         fun startUpdating(startcb:()->Unit) {
-
+            state.startUpdating(startcb)
         }
     }
     data class NineSideBallState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
