@@ -12,6 +12,10 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class NineSidedBallView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = NineSideBallRenderer(this)
+    var onExpandCollapseListener:OnExpandListener?=null
+    fun setOnExpandCollapseListener(onExpandListener:()->Unit,onCollapseListener:()->Unit) {
+        onExpandCollapseListener = OnExpandListener(onExpandListener,onCollapseListener)
+    }
     override fun onDraw(canvas:Canvas) {
         renderer.render(canvas,paint)
     }
@@ -89,6 +93,10 @@ class NineSidedBallView(ctx:Context):View(ctx) {
             animator.update{
                 container?.update{scale ->
                     animator.stop()
+                    when(scale) {
+                        0f -> view.onExpandCollapseListener?.collapseListener?.invoke()
+                        1f -> view.onExpandCollapseListener?.expandListener?.invoke()
+                    }
                 }
             }
         }
@@ -130,4 +138,5 @@ class NineSidedBallView(ctx:Context):View(ctx) {
             return view
         }
     }
+    data class OnExpandListener(var expandListener:()->Unit,var collapseListener:()->Unit)
 }
